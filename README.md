@@ -1,7 +1,3 @@
-Sure! Here's a well-structured, professional, and visually appealing `README.md` file for your Laravel **User-Admin Management System** repository:  
-
----
-
 ### **📌 User-Admin Management System (Laravel 10 + Breeze + Tailwind CSS)**
 🚀 A role-based authentication system built with **Laravel 10**, featuring **Admin & User dashboards**, **DataTables integration**, **CRUD operations**, and more.
 
