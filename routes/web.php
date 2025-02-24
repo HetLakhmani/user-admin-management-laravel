@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use App\Http\Controllers\UserImportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,10 +47,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/admin/update-user/{id}', [AdminController::class, 'updateUser'])->name('admin.update-user');
     Route::delete('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])->name('admin.delete-user');
 });
+
 // User Routes
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.dashboard');
 });
+
+Route::post('/admin/import-users', [UserImportController::class, 'importUsers'])->name('users.import');
 
 // Logout Route
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');

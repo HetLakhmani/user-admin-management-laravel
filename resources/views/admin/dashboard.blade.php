@@ -12,7 +12,13 @@
             <button id="exportCSV" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700">Export to CSV</button>
             <button id="exportPDF" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700">Export to PDF</button>
             <button id="printTable" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-700">Print</button>
+            <button id="importUsersBtn" class="bg-purple-500 text-white px-3 py-1 rounded hover:bg-purple-700">
+            Import Users
+            </button>
         </div>
+
+        <!-- Import Button -->
+        
 
         <!-- User Table -->
         <div class="bg-white shadow-md rounded-lg p-4">
@@ -58,6 +64,25 @@
                     <div class="flex justify-end space-x-2">
                         <button type="button" class="close-modal bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
                         <button type="submit" class="text-black px-4 py-2 rounded">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- Import Users Modal -->
+        <div id="importUsersModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex justify-center items-center">
+            <div class="bg-white p-6 rounded-lg w-1/3">
+                <h2 class="text-lg text-black bg-purple-600 font-semibold mb-4">Import Users</h2>
+                <form id="importUsersForm" enctype="multipart/form-data">
+                    @csrf
+                    <div class="mb-4">
+                        <label class="block text-gray-700">Upload Excel File</label>
+                        <input type="file" id="importFile" name="file" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div class="flex justify-end space-x-2">
+                        <button type="button" class="close-modal bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
+                        <button type="submit" class="bg-purple-600 text-black px-4 py-2 rounded">Import</button>
                     </div>
                 </form>
             </div>
@@ -166,6 +191,42 @@
                     $('#editUserModal').addClass('hidden');
                 });
             });
+
+
+            $(document).ready(function () {
+        // Show Import Modal
+        $('#importUsersBtn').click(function () {
+            $('#importUsersModal').removeClass('hidden');
+        });
+
+        // Close Modal
+        $('.close-modal').click(function () {
+            $('#importUsersModal').addClass('hidden');
+        });
+
+        // Handle File Upload
+        $('#importUsersForm').submit(function (e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: "{{ route('users.import') }}",
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                success: function (response) {
+                    alert(response.message);
+                    $('#importUsersModal').addClass('hidden');
+                    $('#usersTable').DataTable().ajax.reload(); // Reload DataTable
+                },
+                error: function (response) {
+                    alert("Error importing users. Please check the file format.");
+                }
+            });
+        });
+    });
         </script>
     </div>
 </x-app-layout>
